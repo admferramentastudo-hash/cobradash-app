@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/vendas",
+      "destination": "https://projeto1-n8n.zghjbg.easypanel.host/webhook/a42e03bf-9377-4a47-8dc3-8fd5bd22725e"
+    },
+    {
+      "source": "/api/leads",
+      "destination": "https://projeto1-n8n.zghjbg.easypanel.host/webhook/80e11e27-6442-49cb-b121-3aa2680b1bec"
+    },
+    {
+      "source": "/api/funil",
+      "destination": "https://projeto1-n8n.zghjbg.easypanel.host/webhook/312c8c17-56bd-42f1-8e82-57727aed6e79"
+    }
+  ]
+}
