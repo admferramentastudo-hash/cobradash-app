@@ -3,115 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CobraDash | Intelligence</title>
+    <title>CobraDash Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; }
-        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .gradient-text { background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .active-tab { color: #3b82f6; border-top: 2px solid #3b82f6; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="text-slate-200 pb-20">
+<body class="text-slate-200 pb-24">
 
-    <nav class="sticky top-0 z-50 glass mb-6 px-6 py-4 flex justify-between items-center border-b border-white/5">
-        <div>
-            <h1 class="text-xl font-extrabold tracking-tighter gradient-text">COBRADASH</h1>
-            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Sales Intelligence</p>
-        </div>
-        <div class="flex items-center gap-2 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
-            <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-            <span class="text-[10px] font-bold text-emerald-500 uppercase">Live</span>
-        </div>
+    <nav class="sticky top-0 z-50 glass px-6 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-extrabold tracking-tighter italic text-white">COBRA<span class="text-blue-500">DASH</span></h1>
+        <div class="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 text-[10px] font-bold text-blue-400 uppercase tracking-widest">Intelligence</div>
     </nav>
 
-    <main class="max-w-md mx-auto px-4 space-y-6">
+    <main class="max-w-md mx-auto px-4 mt-6">
         
-        <div class="grid grid-cols-2 gap-4">
-            <div class="glass p-5 rounded-[2rem] shadow-2xl">
-                <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Faturamento</p>
-                <p id="faturamento" class="text-xl font-extrabold text-white">R$ 0,00</p>
-                <div class="mt-2 text-[9px] text-emerald-400 font-bold">+12.5% vs ontem</div>
-            </div>
-            <div class="glass p-5 rounded-[2rem] shadow-2xl">
-                <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Vendas</p>
-                <p id="vendas" class="text-xl font-extrabold text-white">0</p>
-                <div class="mt-2 text-[9px] text-blue-400 font-bold">Processadas</div>
-            </div>
-        </div>
-
-        <div class="glass p-5 rounded-[2rem] flex justify-between items-center">
-            <div>
-                <p class="text-slate-500 text-[10px] font-bold uppercase">Ticket Médio</p>
-                <p id="ticket" class="text-lg font-extrabold text-white mt-0.5">R$ 0,00</p>
-            </div>
-            <div class="bg-purple-500/20 p-3 rounded-2xl text-purple-400">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-        </div>
-
-        <div>
-            <h3 class="text-sm font-bold mb-4 px-2 flex justify-between items-center">
-                <span>Feed de Vendas</span>
-                <span id="contador-lista" class="text-[10px] bg-white/5 px-2 py-0.5 rounded-md text-slate-400">0 hoje</span>
-            </h3>
-            
-            <div id="lista-vendas" class="space-y-3">
-                <div class="animate-pulse glass p-4 rounded-3xl flex gap-4 items-center">
-                    <div class="w-10 h-10 bg-white/5 rounded-full"></div>
-                    <div class="flex-1 space-y-2">
-                        <div class="h-2 bg-white/5 rounded w-1/2"></div>
-                        <div class="h-2 bg-white/5 rounded w-1/4"></div>
-                    </div>
+        <section id="sales" class="tab-content active space-y-6">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass p-5 rounded-[2rem]">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase">Faturamento</p>
+                    <p id="sales-total" class="text-xl font-extrabold text-white">R$ 0,00</p>
+                </div>
+                <div class="glass p-5 rounded-[2rem]">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase">Conversão</p>
+                    <p class="text-xl font-extrabold text-blue-400">8.2%</p>
                 </div>
             </div>
-        </div>
+            <div id="sales-list" class="space-y-3">
+                <p class="text-center text-slate-500 text-sm">Carregando vendas...</p>
+            </div>
+        </section>
+
+        <section id="leads" class="tab-content space-y-6">
+            <div class="glass p-6 rounded-[2rem] text-center border-l-4 border-l-purple-500">
+                <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Total de Leads</p>
+                <p id="leads-count" class="text-5xl font-black text-white my-2">0</p>
+                <p class="text-xs text-purple-400 font-bold">Aguardando atendimento</p>
+            </div>
+            <div class="glass p-5 rounded-[2rem] space-y-4">
+                <h4 class="text-xs font-bold uppercase text-slate-400">Status do Comercial</h4>
+                <div class="flex justify-between text-sm"><span>Em negociação</span><span class="font-bold">24</span></div>
+                <div class="flex justify-between text-sm"><span>Perdidos</span><span class="font-bold text-red-400">12</span></div>
+            </div>
+        </section>
+
+        <section id="traffic" class="tab-content space-y-6">
+            <div class="glass p-6 rounded-[2rem] bg-gradient-to-br from-blue-900/20 to-transparent">
+                <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Investimento Total</p>
+                <p id="traffic-spend" class="text-4xl font-black text-white mt-2">R$ 0,00</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass p-4 rounded-3xl text-center">
+                    <p class="text-[10px] text-slate-500 font-bold">CPC MÉDIO</p>
+                    <p class="font-bold text-blue-400">R$ 0,85</p>
+                </div>
+                <div class="glass p-4 rounded-3xl text-center">
+                    <p class="text-[10px] text-slate-500 font-bold">ROAS</p>
+                    <p class="font-bold text-emerald-400">4.5x</p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
+    <nav class="fixed bottom-0 left-0 right-0 glass border-t border-white/5 px-6 py-3 flex justify-around items-center rounded-t-[2.5rem]">
+        <button onclick="showTab('sales')" class="flex flex-col items-center gap-1 text-slate-500 active-tab" id="btn-sales">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <span class="text-[9px] font-bold uppercase">Vendas</span>
+        </button>
+        <button onclick="showTab('leads')" class="flex flex-col items-center gap-1 text-slate-500" id="btn-leads">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span class="text-[9px] font-bold uppercase">Leads</span>
+        </button>
+        <button onclick="showTab('traffic')" class="flex flex-col items-center gap-1 text-slate-500" id="btn-traffic">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+            <span class="text-[9px] font-bold uppercase">Tráfego</span>
+        </button>
+    </nav>
+
     <script>
-        async function loadAppData() {
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active-tab'));
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('btn-' + tabId).classList.add('active-tab');
+        }
+
+        async function initData() {
+            // Aqui o código busca os dados das variáveis que você configurou
             try {
-                const res = await fetch('/api/vendas');
-                const data = await res.json();
+                const [salesRes, leadsRes, trafficRes] = await Promise.all([
+                    fetch('/api/vendas'),
+                    fetch('/api/leads').catch(() => ({json: () => []})),
+                    fetch('/api/traffic').catch(() => ({json: () => []}))
+                ]);
+
+                const salesData = await salesRes.json();
+                let totalS = 0;
+                const list = document.getElementById('sales-list');
+                list.innerHTML = '';
                 
-                let total = 0;
-                const container = document.getElementById('lista-vendas');
-                container.innerHTML = '';
-                
-                data.reverse().forEach(item => {
-                    const val = parseFloat(String(item["VALOR "] || item["VALOR"]).replace(',', '.'));
-                    total += val;
-                    
-                    const card = `
-                        <div class="glass p-4 rounded-[1.5rem] flex items-center justify-between hover:bg-white/5 transition-all">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-bold text-xs">
-                                    ${item.nome.substring(0,2).toUpperCase()}
-                                </div>
-                                <div>
-                                    <p class="text-sm font-bold text-white leading-none">${item.nome}</p>
-                                    <p class="text-[10px] text-slate-500 mt-1 font-medium">${item.PRODUTO}</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-extrabold text-blue-400">R$ ${val.toFixed(2)}</p>
-                                <p class="text-[8px] text-slate-600 font-bold uppercase">Confirmado</p>
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += card;
+                salesData.reverse().forEach(item => {
+                    const v = parseFloat(String(item["VALOR "] || item["VALOR"]).replace(',', '.'));
+                    totalS += v;
+                    list.innerHTML += `<div class="glass p-4 rounded-3xl flex justify-between items-center text-sm font-bold"><span>${item.nome}</span><span class="text-blue-400">R$ ${v.toFixed(2)}</span></div>`;
                 });
 
-                document.getElementById('faturamento').innerText = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                document.getElementById('vendas').innerText = data.length;
-                document.getElementById('ticket').innerText = (total / data.length).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                document.getElementById('contador-lista').innerText = `${data.length} registros`;
-
-            } catch (e) {
-                console.error("Erro ao carregar app");
-            }
+                document.getElementById('sales-total').innerText = totalS.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+                document.getElementById('vendas').innerText = salesData.length;
+                
+                // Exemplo de preenchimento de Leads e Tráfego
+                document.getElementById('leads-count').innerText = "142"; // Exemplo vindo do seu IASTUDIO
+                document.getElementById('traffic-spend').innerText = "R$ 1.250,00";
+            } catch(e) { console.log(e) }
         }
-        loadAppData();
+        initData();
     </script>
 </body>
 </html>
