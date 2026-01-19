@@ -12,14 +12,7 @@ const Dashboard = () => {
         const response = await fetch('/api/vendas');
         const rawData = await response.json();
         
-        // TRATAMENTO DOS DADOS DO SEU N8N
-        const cleanedData = rawData.map(item => ({
-          ...item,
-          // Converte o "VALOR " (com espaço) de texto para número
-          valorNum: parseFloat(item["VALOR "] || item["VALOR"] || 0),
-          // Formata a data para o gráfico
-          dataSimplificada: item.data ? item.data.split(' ')[1] + '/' + item.data.split(' ')[0].substring(0,3) : ''
-        }));
+        RATAMENTO DOS DADOS DO SEU N8N
 
         setData(cleanedData);
         setLoading(false);
