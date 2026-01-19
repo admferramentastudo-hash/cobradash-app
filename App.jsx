@@ -12,12 +12,18 @@ const Dashboard = () => {
         const response = await fetch('/api/vendas');
         const rawData = await response.json();
         
+        // Se não vierem dados, para aqui para não dar erro
+        if (!rawData || !Array.isArray(rawData)) {
+          setLoading(false);
+          return;
+        }
+
         const cleanedData = rawData.map(item => {
-          // Ajuste para o espaço no nome da coluna "VALOR "
+          // LÊ O VALOR DA SUA PLANILHA (QUE TEM UM ESPAÇO NO NOME "VALOR ")
           const valorRaw = item["VALOR "] || item["VALOR"] || 0;
           const valorNum = parseFloat(String(valorRaw).replace(',', '.'));
           
-          // Formata a data de "January 01 2026" para "01/Jan"
+          // FORMATA A DATA DE "January 01 2026" PARA "01/Jan"
           let dataRef = "S/D";
           if (item.data) {
             const p = item.data.split(' ');
@@ -27,7 +33,7 @@ const Dashboard = () => {
           return { ...item, valorNum: valorNum || 0, dataRef };
         });
 
-        // Agrupa valores por dia para o gráfico
+        // AGRUPA POR DIA PARA O GRÁFICO
         const grouped = cleanedData.reduce((acc, curr) => {
           const found = acc.find(a => a.dia === curr.dataRef);
           if (found) { found.total += curr.valorNum; }
@@ -38,13 +44,14 @@ const Dashboard = () => {
         setData({ total: cleanedData, chart: grouped });
         setLoading(false);
       } catch (e) {
+        console.error("Erro no Dashboard:", e);
         setLoading(false);
       }
     };
     fetchData();
   }, []);
 
-  if (loading) return <div className="h-screen bg-slate-950 flex items-center justify-center text-white">Carregando dados do n8n...</div>;
+  if (loading) return <div className="h-screen bg-slate-950 flex items-center justify-center text-white font-bold">CARREGANDO DADOS...</div>;
 
   const faturamento = data.total.reduce((acc, curr) => acc + curr.valorNum, 0);
   const vendas = data.total.length;
@@ -54,21 +61,31 @@ const Dashboard = () => {
     <div className="min-h-screen bg-slate-950 p-4 md:p-8 text-slate-100 font-sans">
       <div className="max-w-7xl mx-auto">
         <header className="mb-10">
-          <h1 className="text-4xl font-black text-white italic tracking-tighter">COBRADASH <span className="text-blue-500">2.0</span></h1>
-          <p className="text-slate-500 font-medium">Dados extraídos da API em tempo real</p>
+          <h1 className="text-4xl font-black text-white italic tracking-tighter uppercase">Cobra<span className="text-blue-500">Dash</span></h1>
+          <p className="text-slate-500 font-medium italic">Dados oficiais n8n</p>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          <Card icon={<DollarSign/>} label="Faturamento Total" value={`R$ ${faturamento.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`} color="text-emerald-400" />
-          <Card icon={<ShoppingBag/>} label="Qtd Vendas" value={vendas} color="text-blue-400" />
-          <Card icon={<TrendingUp/>} label="Ticket Médio" value={`R$ ${ticket.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`} color="text-purple-400" />
-          <Card icon={<Users/>} label="Clientes Únicos" value={[...new Set(data.total.map(d => d.nome))].length} color="text-orange-400" />
+          <div className="bg-slate-900 p-6 rounded-3xl border border-slate-800 border-l-4 border-l-emerald-500">
+            <p className="text-xs text-slate-500 font-bold uppercase mb-1">Faturamento</p>
+            <p className="text-2xl font-black">R$ {faturamento.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</p>
+          </div>
+          <div className="bg-slate-900 p-6 rounded-3xl border border-slate-800 border-l-4 border-l-blue-500">
+            <p className="text-xs text-slate-500 font-bold uppercase mb-1">Vendas</p>
+            <p className="text-2xl font-black">{vendas}</p>
+          </div>
+          <div className="bg-slate-900 p-6 rounded-3xl border border-slate-800 border-l-4 border-l-purple-500">
+            <p className="text-xs text-slate-500 font-bold uppercase mb-1">Ticket Médio</p>
+            <p className="text-2xl font-black">R$ {ticket.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</p>
+          </div>
+          <div className="bg-slate-900 p-6 rounded-3xl border border-slate-800 border-l-4 border-l-orange-500">
+            <p className="text-xs text-slate-500 font-bold uppercase mb-1">Clientes</p>
+            <p className="text-2xl font-black">{[...new Set(data.total.map(d => d.nome))].length}</p>
+          </div>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-2xl">
-          <h2 className="text-xl font-bold mb-8 flex items-center gap-2">
-            <div className="w-2 h-6 bg-blue-500 rounded-full"></div> Fluxo de Caixa (Diário)
-          </h2>
+          <h2 className="text-xl font-bold mb-8">Vendas por Dia</h2>
           <div className="h-80 w-full">
             <ResponsiveContainer>
               <AreaChart data={data.chart}>
@@ -91,17 +108,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
-const Card = ({ icon, label, value, color }) => (
-  <div className="bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-lg">
-    <div className="flex items-center gap-4">
-      <div className={`p-4 bg-slate-950 rounded-2xl ${color}`}>{icon}</div>
-      <div>
-        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">{label}</p>
-        <p className="text-2xl font-black text-white">{value}</p>
-      </div>
-    </div>
-  </div>
-);
 
 export default Dashboard;
