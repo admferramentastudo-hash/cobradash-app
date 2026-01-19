@@ -2,92 +2,116 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CobraDash 2.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CobraDash | Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; }
+        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .gradient-text { background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
 </head>
-<body class="bg-slate-950 text-white font-sans p-6">
-    <div class="max-w-4xl mx-auto">
-        <header class="mb-8 flex justify-between items-center">
-            <h1 class="text-3xl font-black italic tracking-tighter">COBRA<span class="text-blue-500">DASH</span></h1>
-            <div id="status-dot" class="flex items-center gap-2 text-xs font-bold text-slate-500">
-                <span class="w-2 h-2 bg-slate-500 rounded-full"></span> AGUARDANDO N8N
-            </div>
-        </header>
+<body class="text-slate-200 pb-20">
 
-        <div id="loader" class="text-center py-20">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            <p class="text-slate-400">Buscando vendas na planilha...</p>
+    <nav class="sticky top-0 z-50 glass mb-6 px-6 py-4 flex justify-between items-center border-b border-white/5">
+        <div>
+            <h1 class="text-xl font-extrabold tracking-tighter gradient-text">COBRADASH</h1>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Sales Intelligence</p>
+        </div>
+        <div class="flex items-center gap-2 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
+            <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+            <span class="text-[10px] font-bold text-emerald-500 uppercase">Live</span>
+        </div>
+    </nav>
+
+    <main class="max-w-md mx-auto px-4 space-y-6">
+        
+        <div class="grid grid-cols-2 gap-4">
+            <div class="glass p-5 rounded-[2rem] shadow-2xl">
+                <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Faturamento</p>
+                <p id="faturamento" class="text-xl font-extrabold text-white">R$ 0,00</p>
+                <div class="mt-2 text-[9px] text-emerald-400 font-bold">+12.5% vs ontem</div>
+            </div>
+            <div class="glass p-5 rounded-[2rem] shadow-2xl">
+                <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Vendas</p>
+                <p id="vendas" class="text-xl font-extrabold text-white">0</p>
+                <div class="mt-2 text-[9px] text-blue-400 font-bold">Processadas</div>
+            </div>
         </div>
 
-        <div id="dashboard" class="hidden animate-in fade-in duration-500">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-2xl">
-                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Faturamento Total</p>
-                    <p id="faturamento" class="text-4xl font-black text-emerald-400 mt-1">R$ 0,00</p>
-                </div>
-                <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-2xl">
-                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Vendas Realizadas</p>
-                    <p id="vendas" class="text-4xl font-black text-blue-500 mt-1">0</p>
-                </div>
+        <div class="glass p-5 rounded-[2rem] flex justify-between items-center">
+            <div>
+                <p class="text-slate-500 text-[10px] font-bold uppercase">Ticket Médio</p>
+                <p id="ticket" class="text-lg font-extrabold text-white mt-0.5">R$ 0,00</p>
             </div>
+            <div class="bg-purple-500/20 p-3 rounded-2xl text-purple-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+        </div>
 
-            <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden">
-                <div class="p-4 border-b border-slate-800 bg-slate-900/50">
-                    <h2 class="font-bold text-sm">LISTA DE VENDAS RECENTES</h2>
-                </div>
-                <div class="overflow-x-auto max-h-[400px] overflow-y-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="sticky top-0 bg-slate-800 text-slate-400 text-[10px] uppercase font-bold">
-                            <tr>
-                                <th class="p-4">Cliente</th>
-                                <th class="p-4">Produto</th>
-                                <th class="p-4 text-right">Valor</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-corpo" class="divide-y divide-slate-800">
-                            </tbody>
-                    </table>
+        <div>
+            <h3 class="text-sm font-bold mb-4 px-2 flex justify-between items-center">
+                <span>Feed de Vendas</span>
+                <span id="contador-lista" class="text-[10px] bg-white/5 px-2 py-0.5 rounded-md text-slate-400">0 hoje</span>
+            </h3>
+            
+            <div id="lista-vendas" class="space-y-3">
+                <div class="animate-pulse glass p-4 rounded-3xl flex gap-4 items-center">
+                    <div class="w-10 h-10 bg-white/5 rounded-full"></div>
+                    <div class="flex-1 space-y-2">
+                        <div class="h-2 bg-white/5 rounded w-1/2"></div>
+                        <div class="h-2 bg-white/5 rounded w-1/4"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
-        async function fetchVendas() {
+        async function loadAppData() {
             try {
-                const response = await fetch('/api/vendas');
-                const data = await response.json();
+                const res = await fetch('/api/vendas');
+                const data = await res.json();
                 
-                let totalFaturado = 0;
-                const corpo = document.getElementById('tabela-corpo');
+                let total = 0;
+                const container = document.getElementById('lista-vendas');
+                container.innerHTML = '';
                 
-                data.forEach(item => {
-                    const v = item["VALOR "] || item["VALOR"] || "0";
-                    const valorNum = parseFloat(String(v).replace(',', '.'));
-                    totalFaturado += valorNum;
+                data.reverse().forEach(item => {
+                    const val = parseFloat(String(item["VALOR "] || item["VALOR"]).replace(',', '.'));
+                    total += val;
                     
-                    corpo.innerHTML += `
-                        <tr class="hover:bg-slate-800/50 transition-colors">
-                            <td class="p-4 text-sm font-medium border-none">${item.nome}</td>
-                            <td class="p-4 text-xs text-slate-500 border-none">${item.PRODUTO}</td>
-                            <td class="p-4 text-sm font-bold text-blue-400 text-right border-none">R$ ${valorNum.toFixed(2)}</td>
-                        </tr>
+                    const card = `
+                        <div class="glass p-4 rounded-[1.5rem] flex items-center justify-between hover:bg-white/5 transition-all">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-bold text-xs">
+                                    ${item.nome.substring(0,2).toUpperCase()}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-white leading-none">${item.nome}</p>
+                                    <p class="text-[10px] text-slate-500 mt-1 font-medium">${item.PRODUTO}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-extrabold text-blue-400">R$ ${val.toFixed(2)}</p>
+                                <p class="text-[8px] text-slate-600 font-bold uppercase">Confirmado</p>
+                            </div>
+                        </div>
                     `;
+                    container.innerHTML += card;
                 });
 
-                document.getElementById('faturamento').innerText = totalFaturado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('faturamento').innerText = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 document.getElementById('vendas').innerText = data.length;
-                document.getElementById('status-dot').innerHTML = '<span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> ONLINE';
-                document.getElementById('status-dot').className = "flex items-center gap-2 text-xs font-bold text-emerald-500";
-                
-                document.getElementById('loader').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-            } catch (err) {
-                document.getElementById('loader').innerHTML = `<p class="text-red-500 font-bold">ERRO AO CARREGAR: Verifique o link da API</p>`;
+                document.getElementById('ticket').innerText = (total / data.length).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('contador-lista').innerText = `${data.length} registros`;
+
+            } catch (e) {
+                console.error("Erro ao carregar app");
             }
         }
-        fetchVendas();
+        loadAppData();
     </script>
 </body>
 </html>
